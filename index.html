@@ -1,0 +1,46 @@
+<script>
+  class PinInput extends HTMLElement {
+
+  }
+
+  function createPinInput(numberOfDigits) {
+    if (numberOfDigits < 1) {
+      throw new Error('Expects: numberOfDigits >= 1')
+    }
+
+    const $pinInput = document.createElement('div')
+    const $pinDigitInputs = []
+    for (let index = 0; index < numberOfDigits; index++) {
+      const $pinDigitInput = document.createElement('input')
+      $pinDigitInput.type = 'number'
+      $pinDigitInput.min = 0
+      $pinDigitInput.max = 9
+      $pinDigitInputs.push($pinDigitInput)
+    }
+    for (const $pinDigitInput of $pinDigitInputs) {
+      $pinInput.appendChild($pinDigitInput)
+    }
+    $pinInput.focus = function () {
+      $pinDigitInputs[0].focus()
+    }
+    $pinInput.addEventListener('keyup', function (event) {
+      const $pinDigitInput = event.target
+      const pinDigitInputIndex = $pinDigitInputs.indexOf($pinDigitInput)
+      const nextPinDigitInputIndex = pinDigitInputIndex + 1
+      if (
+        $pinDigitInput.value.length >= 1 &&
+        nextPinDigitInputIndex < $pinDigitInputs.length
+      ) {
+        const $nextPinDigitInput = $pinDigitInputs[nextPinDigitInputIndex]
+        $nextPinDigitInput.focus()
+      }
+    })
+    return $pinInput
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const $pinInput = createPinInput(4)
+    document.body.appendChild($pinInput)
+    $pinInput.focus()
+  })
+</script>
